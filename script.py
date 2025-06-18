@@ -247,11 +247,44 @@ print("\nPrimeras 5 filas con 'Tipo Transaccion Compleja' (usando df.apply axis=
 print(df_interpolate[['Ingreso', 'Quantity', 'Payment Method', 'Tipo Transaccion Compleja']].head())
 
 
+# Parte III: Transformación y Análisis Avanzado de Datos con Pandas
+# 1. Transformación de Datos
+
+# Extraer mes de 'Transaction Date' para análisis temporal
+df_interpolate['Mes'] = df_interpolate['Transaction Date'].dt.month_name()
+print("\nCálculos con transformación de Datos:")
+print("\nPrimeras 5 filas con 'Mes':")
+print(df_interpolate[['Transaction Date', 'Mes']].head())
 
 
+# 2. Agrupación y Agregación
+# Agrupaciones para obtener insights
+
+print("\nVentas totales por día de la semana:")
+print(ventas_por_dia_semana)
+
+# Ventas totales por producto y mes
+ventas_por_producto_mes = df_interpolate.groupby(['Item', 'Mes'])['Ingreso'].sum()
+print("\nVentas totales por producto y mes:")
+print(ventas_por_producto_mes.head()) # Mostrar solo las primeras para brevedad
+
+# 3. Análisis Personalizado con apply
+# Aplica funciones de agregación como sum, mean, count, min, max, std, y var.
+# Aplicar múltiples funciones de agregación
+print("\nEstadísticas de Ingreso por Producto:")
+print("\nPrimeras 5 filas con 'Tipo Transaccion Compleja' (usando df.apply axis=1):")
+print(df_interpolate[['Ingreso', 'Quantity', 'Payment Method', 'Tipo Transaccion Compleja']].head())
 
 
+# Calcula la desviación de cada venta ('Ingreso') respecto a la media de su grupo ('Item'). para identificar ventas atípicas dentro de cada categoría de producto.
+print("\nCálculo de la desviación del Ingreso respecto a la media por Item:")
+# Se calcula el ingreso medio por 'Item' y se alinea con el DataFrame original
+df_interpolate['Ingreso Medio por Item'] = df_interpolate.groupby('Item')['Ingreso'].transform('mean')
+# Se calcula la desviación de cada venta respecto a la media de su 'Item'
+df_interpolate['Desviacion Ingreso'] = df_interpolate['Ingreso'] - df_interpolate['Ingreso Medio por Item']
 
+print("\nPrimeras 5 filas con 'Desviacion Ingreso' y 'Ingreso Medio por Item':")
+print(df_interpolate[['Item', 'Ingreso', 'Ingreso Medio por Item', 'Desviacion Ingreso']].head())
 
 
 
