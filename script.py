@@ -1,6 +1,8 @@
 # Importar librerías
 import pandas as pd
 import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 # 2. Cargar los Datos del dataset
 path = 'dataset/dirty_cafe_sales.csv'
@@ -287,9 +289,66 @@ print("\nPrimeras 5 filas con 'Desviacion Ingreso' y 'Ingreso Medio por Item':")
 print(df_interpolate[['Item', 'Ingreso', 'Ingreso Medio por Item', 'Desviacion Ingreso']].head())
 
 
+# PARTE IV: Análisis Exploratorio de Datos (EDA) y Visualización
+
+print("\n--- Iniciando Parte IV: Análisis Exploratorio de Datos (EDA) y Visualización ---")
+
+# 1. Análisis Descriptivo
+print("\nInformación general del DataFrame:")
+df.info()
+
+print("\nEstadísticas descriptivas de las variables numéricas:")
+print(df.describe())
 
 
+# 2. Visualización de Datos
+
+# Configuración de estilo para los gráficos
+sns.set_style("whitegrid")
+
+# Combinar histogramas y boxplots para visualizar la distribución de las ventas y detectar valores atípicos.
+# Usando la columna 'Ingreso' que representa las ventas por transacción.
+print("\nGenerando visualización de la distribución de Ingresos por transacción...")
+fig, axes = plt.subplots(2, 1, figsize=(14, 9), sharex=True, 
+                         gridspec_kw={"height_ratios": (.8, .2)})
+fig.suptitle('Distribución de Ingresos y Detección de Atípicos', fontsize=16)
+
+# Histograma
+sns.histplot(df_interpolate['Ingreso'], ax=axes[0], kde=True, bins=40)
+axes[0].set_ylabel('Frecuencia')
+axes[0].set_xlabel('')
+
+# Boxplot
+sns.boxplot(x=df_interpolate['Ingreso'], ax=axes[1])
+axes[1].set_xlabel('Ingreso por Transacción')
+
+plt.tight_layout(rect=[0, 0.03, 1, 0.95])
+plt.show()
 
 
+# 3. Crear gráficos de líneas para mostrar las tendencias de ventas a lo largo del tiempo.
+print("\nGenerando visualización de tendencias de ventas a lo largo del tiempo...")
+# Agrupamos los ingresos por semana para visualizar la tendencia.
+df_temporal = df_interpolate.set_index('Transaction Date')
+ventas_semanales = df_temporal['Ingreso'].resample('W').sum()
+
+plt.figure(figsize=(15, 7))
+ventas_semanales.plot(title='Tendencia de Ingresos Semanales', marker='o', linestyle='-')
+plt.xlabel('Semana')
+plt.ylabel('Ingresos Totales')
+plt.grid(True)
+plt.tight_layout()
+plt.show()
 
 
+# 4. Utilizar gráficos de dispersión para analizar la relación entre diferentes variables.
+# Analizaremos la relación entre 'Price Per Unit' y 'Quantity'.
+print("\nGenerando visualización de la relación entre Precio Unitario y Cantidad...")
+plt.figure(figsize=(12, 7))
+sns.scatterplot(data=df_interpolate, x='Price Per Unit', y='Quantity', alpha=0.6, hue='Categoria Precio')
+plt.title('Relación entre Precio Unitario y Cantidad Vendida')
+plt.xlabel('Precio Unitario')
+plt.ylabel('Cantidad')
+plt.grid(True)
+plt.tight_layout()
+plt.show()
