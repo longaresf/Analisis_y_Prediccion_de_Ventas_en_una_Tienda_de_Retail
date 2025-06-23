@@ -352,3 +352,38 @@ plt.ylabel('Cantidad')
 plt.grid(True)
 plt.tight_layout()
 plt.show()
+
+
+# PARTE V: Exploración y Visualización de Datos Avanzada
+
+print("\n--- Iniciando Parte V: Exploración y Visualización de Datos Avanzada ---")
+
+# 1. Análisis de correlación y mapa de calor
+print("\nCalculando matriz de correlación y generando mapa de calor...")
+numerical_cols = ['Quantity', 'Price Per Unit', 'Total Spent', 'Ingreso']
+correlation_matrix = df_interpolate[numerical_cols].corr()
+
+plt.figure(figsize=(10, 8))
+sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', fmt=".2f", linewidths=.5)
+plt.title('Matriz de Correlación de Variables Numéricas Clave')
+plt.show()
+
+# 2. Subplots para comparar distribuciones de variables clave
+print("\nGenerando subplots para comparar distribuciones de Quantity y Price Per Unit...")
+fig, axes = plt.subplots(1, 2, figsize=(16, 6))
+
+# Histograma para Quantity
+sns.histplot(df_interpolate['Quantity'], kde=True, bins=30, ax=axes[0])
+axes[0].set_title('Distribución de Cantidad de Productos Vendidos')
+axes[0].set_xlabel('Cantidad')
+axes[0].set_ylabel('Frecuencia')
+axes[0].grid(True)
+
+# Histograma para Price Per Unit
+sns.histplot(df_interpolate['Price Per Unit'], kde=True, bins=30, ax=axes[1])
+axes[1].set_title('Distribución de Precio por Unidad')
+axes[1].set_xlabel('Precio por Unidad')
+axes[1].set_ylabel('Frecuencia')
+axes[1].grid(True)
+plt.tight_layout()
+plt.show()
